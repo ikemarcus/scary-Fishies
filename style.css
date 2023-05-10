@@ -6,3 +6,30 @@
     scroll-behavior: smooth;
     background-image: url(https://th.bing.com/th/id/R.a42756d3103f3cb0e7d67f935f63ad43?rik=RTmTDPCdJ%2fcZHw&riu=http%3a%2f%2fgetwallpapers.com%2fwallpaper%2ffull%2f8%2fb%2fa%2f172953.jpg&ehk=YdmDX9G4mlrssEnk%2bKRGSDHGvFZIOYB9WgR6LSgL6PM%3d&risl=&pid=ImgRaw&r=0);
 }
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .scary-button {
+    background-color: #000;
+    color: #fff;
+    border: 3px solid #ff0000;
+    border-radius: 8px;
+    font-size: 48px;
+    font-weight: bold;
+    padding: 30px 60px;
+    box-shadow: 0px 0px 10px #ff0000;
+    transition: all 0.3s ease;
+  }
+  
+  .scary-button:hover {
+    background-color: #ff0000;
+    border-color: #000;
+    box-shadow: 0px 0px 20px #000;
+  }
+  
+  
