@@ -4,7 +4,12 @@
     padding: 0;
     font-family: 'Lexend Deca', sans-serif;
     scroll-behavior: smooth;
-    background-image: url(https://th.bing.com/th/id/R.a42756d3103f3cb0e7d67f935f63ad43?rik=RTmTDPCdJ%2fcZHw&riu=http%3a%2f%2fgetwallpapers.com%2fwallpaper%2ffull%2f8%2fb%2fa%2f172953.jpg&ehk=YdmDX9G4mlrssEnk%2bKRGSDHGvFZIOYB9WgR6LSgL6PM%3d&risl=&pid=ImgRaw&r=0);
+}
+
+body {
+    background-image: url(https://th.bing.com/th/id/R.eb65e0eca2b579f2d72459022e8f8be8?rik=SKzUWtlje5XK1g&pid=ImgRaw&r=0);
+    background-repeat: no-repeat;
+    background-size: 100%;
 }
 
 .button-container {
@@ -15,7 +20,10 @@
   }
   
   .scary-button {
-    background-color: #000;
+    margin-top: -600px;
+    background-image: url(https://th.bing.com/th/id/R.eb65e0eca2b579f2d72459022e8f8be8?rik=SKzUWtlje5XK1g&pid=ImgRaw&r=0);
+    background-repeat: no-repeat;
+    background-size: 100%;
     color: #fff;
     border: 3px solid #ff0000;
     border-radius: 8px;
@@ -27,9 +35,18 @@
   }
   
   .scary-button:hover {
-    background-color: #ff0000;
     border-color: #000;
     box-shadow: 0px 0px 20px #000;
   }
   
+  .scary-text {
+    padding-top: 250px;
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: 55px;
+    font-weight: bold;
+    color: #ff0000;
+    text-align: center;
+    text-shadow: 2px 2px 5px #000;
+    background: none;
+  }
   
