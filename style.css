@@ -18,10 +18,9 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-  }
+}
   
-  .scary-button {
-    margin-top: -600px;
+.scary-button {
     background-image: url(https://th.bing.com/th/id/R.eb65e0eca2b579f2d72459022e8f8be8?rik=SKzUWtlje5XK1g&pid=ImgRaw&r=0);
     background-repeat: no-repeat;
     background-size: 100%;
@@ -33,14 +32,18 @@ body {
     padding: 30px 60px;
     box-shadow: 0px 0px 10px #ff0000;
     transition: all 0.3s ease;
-  }
+}
+
+.scary-a {
+    margin-top: -600px;
+}
   
-  .scary-button:hover {
+.scary-button:hover {
     border-color: #000;
     box-shadow: 0px 0px 20px #000;
-  }
+}
   
-  .scary-text {
+.scary-text {
     padding-top: 250px;
     font-family: 'Cinzel Decorative', cursive;
     font-size: 55px;
@@ -49,5 +52,5 @@ body {
     text-align: center;
     text-shadow: 2px 2px 5px #000;
     background: none;
-  }
+}
   
