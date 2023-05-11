@@ -10,11 +10,43 @@
       background-color: lightblue;
     }
     
+    .instructions {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 24px;
+      font-family: Arial, sans-serif;
+      color: white;
+      text-shadow: 2px 2px 2px black;
+      text-align: center;
+      }
+      
+      .key {
+        display: inline-block;
+        border: 2px solid black;
+        border-radius: 5px;
+        padding: 5px 10px;
+        margin: 10px;
+      }
+      
+      .key.spacebar {
+        background-color: lightgreen;
+      }
+      
+      .key.arrow {
+        background-color: yellow;
+      }
   </style>
 </head>
 <body>
   <!-- The game canvas -->
   <canvas id="game-canvas" width="1520" height="730"></canvas>
+
+  <div class="instructions">
+    <p>Use the <span class="key arrow">left</span> and <span class="key arrow">right</span> arrow keys to move.</p>
+    <p>Press the <span class="key spacebar">spacebar</span> to jump.</p>
+  </div>
 
   <script>
     // Game variables
