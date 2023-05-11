@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Platform Game</title>
+  <style>
+    #gameArea {
+      width: 1520px;
+      height: 730px;
+      background-color: lightblue;
+      position: relative;
+    }
+
+    #player {
+      width: 50px;
+      height: 50px;
+      background-color: red;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+
+    .platform {
+      width: 200px;
+      height: 20px;
+      background-color: green;
+      position: absolute;
+    }
+
+    #platform1 {
+      bottom: 50px;
+      left: 100px;
+    }
+
+    #platform2 {
+      bottom: 150px;
+      left: 500px;
+    }
+  </style>
+</head>
+<body>
+    <div id="gameArea">
+        <div id="platform1" class="platform"></div>
+        <div id="platform2" class="platform"></div>
+        <div id="player"></div>
+      </div>
+
+  <script>
+    const gameArea = document.getElementById('gameArea');
+    const player = document.getElementById('player');
+    let playerX = 0;
+    let playerY = 0;
+    const playerSpeed = 5;
+    const jumpHeight = 100;
+    let isJumping = false;
+    let isFalling = false;
+
+    const platforms = [
+      { element: document.getElementById('platform1'), top: 50, left: 100, width: 200, height: 20 },
+      { element: document.getElementById('platform2'), top: 150, left: 500, width: 200, height: 20 },
+    ];
+
+    // Game loop
+    function gameLoop() {
+      // Move player
+      player.style.left = playerX + 'px';
+      player.style.bottom = playerY + 'px';
+
+      // Check for collision with game area boundaries
+      if (playerX < 0) {
+        playerX = 0;
+      }
+      if (playerX > gameArea.offsetWidth - player.offsetWidth) {
+        playerX = gameArea.offsetWidth - player.offsetWidth;
+      }
+      if (playerY < 0) {
+        playerY = 0;
+        isFalling = false;
+      }
+      if (playerY > gameArea.offsetHeight - player.offsetHeight) {
+        playerY = gameArea.offsetHeight - player.offsetHeight;
+        isJumping = false;
+      }
+
+      // Request next frame
+      window.requestAnimationFrame(gameLoop);
+    }
+    
+    // Move player left
+    function moveLeft() {
+      playerX -= playerSpeed;
+    }
+
+    // Move player right
+    function moveRight() {
+      playerX += playerSpeed;
+    }
+
+    // Make player jump
+    function jump() {
+      if (isJumping || isFalling) {
+        return;
+      }
+
+      isJumping = true;
+
+      let jumpInterval = setInterval(function() {
+        if (playerY >= jumpHeight) {
+          clearInterval(jumpInterval);
+          isFalling = true;
+        } else {
+          playerY += playerSpeed * 2;
+        }
+      }, 10);
+
+      setTimeout(function() {
+        let fallInterval = setInterval(function() {
+          if (playerY <= 0) {
+            clearInterval(fallInterval);
+            isJumping = false;
+            isFalling = false;
+          } else {
+            playerY -= playerSpeed * 2;
+          }
+        }, 10);
+      }, 500);
+    }
+
+    // Add event listeners for arrow keys and spacebar
+    document.addEventListener('keydown', function(event) {
+      if (event.code === 'ArrowLeft') {
+        moveLeft();
+      } else if (event.code === 'ArrowRight') {
+        moveRight();
+      } else if (event.code === 'Space') {
+        jump();
+      }
+    });
+
+    // Start game loop
+    window.requestAnimationFrame(gameLoop);
+  </script>
+</body>
+</html>
