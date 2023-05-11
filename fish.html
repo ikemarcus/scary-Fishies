@@ -8,6 +8,7 @@
     canvas {
       border: 1px solid black;
     }
+    
   </style>
 </head>
 <body>
@@ -24,6 +25,20 @@
     var jumpHeight = 100;
     var isJumping = false;
     var platforms = [];
+
+    // Move player left
+    function moveLeft() {
+      if (playerX > 0) {
+        playerX -= playerSpeed;
+      }
+    }
+
+    // Move player right
+    function moveRight() {
+      if (playerX < game-canvas.offsetWidth - player.offsetWidth) {
+        playerX += playerSpeed;
+      }
+    }
 
     // Create platforms
     for (var i = 0; i < 5; i++) {
