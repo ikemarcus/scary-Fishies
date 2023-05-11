@@ -26,7 +26,18 @@
       color: red;
       text-shadow: 2px 2px 2px black;
       text-align: center;
+      animation: fadeOut 15s forwards;
     }
+
+    @keyframes fadeOut {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      display: none;
+    }
+  }
 
     .key {
       display: inline-block;
@@ -61,7 +72,7 @@
   <!-- The game canvas -->
   <canvas id="game-canvas" width="1520" height="730"></canvas>
 
-  <div class="instructions">
+  <div id="instructions" class="instructions">
     <p>Use the <span class="key arrow">left</span> and <span class="key arrow">right</span> arrow keys to move.</p>
     <p>Press the <span class="key spacebar">spacebar</span> to jump.</p>
   </div>
@@ -176,6 +187,8 @@
         }
     }, 10);
     }
+
+ 
 
 // Start game loop
 window.requestAnimationFrame(gameLoop);
