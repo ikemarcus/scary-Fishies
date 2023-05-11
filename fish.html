@@ -20,6 +20,8 @@
     // Game variables
     var canvas = document.getElementById("game-canvas");
     var ctx = canvas.getContext("2d");
+    var playerImage = new Image();
+    playerImage.src = "https://pngimg.com/uploads/goldfish/goldfish_PNG95.png"; // Replace with the filename of your player image
     var playerX = canvas.width / 2;
     var playerY = canvas.height - 50;
     var playerSpeed = 5;
@@ -67,8 +69,7 @@
       }
 
       // Draw player
-      ctx.fillStyle = "#ff0000";
-      ctx.fillRect(playerX, playerY, 50, 50);
+      ctx.drawImage(playerImage, playerX, playerY, 60, 60);
 
       // Move player
       if (isJumping) {
