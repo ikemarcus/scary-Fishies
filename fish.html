@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>My Platform Game</title>
+  <style>
+    /* CSS for the game canvas */
+    canvas {
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <!-- The game canvas -->
+  <canvas id="game-canvas" width="640" height="480"></canvas>
+
+  <script>
+    // Game variables
+    var canvas = document.getElementById("game-canvas");
+    var ctx = canvas.getContext("2d");
+    var playerX = canvas.width / 2;
+    var playerY = canvas.height - 50;
+    var playerSpeed = 5;
+    var jumpHeight = 100;
+    var isJumping = false;
+    var platforms = [];
+
+    // Create platforms
+    for (var i = 0; i < 5; i++) {
+      platforms.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        width: 100,
+        height: 20
+      });
+    }
+
+    // Event listeners
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("keyup", onKeyUp);
+
+    // Game loop
+    function gameLoop() {
+      // Clear canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw platforms
+      for (var i = 0; i < platforms.length; i++) {
+        ctx.fillStyle = "#00ff00";
+        ctx.fillRect(platforms[i].x, platforms[i].y, platforms[i].width, platforms[i].height);
+      }
+
+      // Draw player
+      ctx.fillStyle = "#ff0000";
+      ctx.fillRect(playerX, playerY, 50, 50);
+
+      // Move player
+      if (isJumping) {
+        playerY -= playerSpeed * 2;
+      } else {
+        playerY += playerSpeed;
+      }
+
+      // Check for collision with platforms
+      for (var i = 0; i < platforms.length; i++) {
+        if (playerY + 50 >= platforms[i].y && playerY + 50 <= platforms[i].y + platforms[i].height && playerX + 50 >= platforms[i].x && playerX <= platforms[i].x + platforms[i].width) {
+          isJumping = false;
+          playerY = platforms[i].y - 50;
+          break;
+        }
+      }
+
+      // Check for collision with bottom of canvas
+      if (playerY + 50 >= canvas.height) {
+        isJumping = false;
+        playerY = canvas.height - 50;
+      }
+
+      // Redraw canvas
+      window.requestAnimationFrame(gameLoop);
+    }
+
+    // Event handlers
+    function onKeyDown(event) {
+      if (event.keyCode === 37) { // Left arrow
+        playerX -= playerSpeed;
+      } else if (event.keyCode === 39) { // Right arrow
+        playerX += playerSpeed;
+      } else if (event.keyCode === 32) { // Spacebar
+        if (!isJumping) {
+          isJumping = true;
+          jump();
+        }
+      }
+    }
+
+    function onKeyUp(event) {
+      // TODO: Handle key up events
+    }
+
+    function jump() {
+      var initialY = playerY;
+      var jumpInterval = setInterval(function() {
+        if (playerY <= initialY -
+        jumpHeight) {
+      clearInterval(jumpInterval);
+    } else {
+      playerY -= playerSpeed * 2;
+    }
+  }, 10);
+}
+
+// Start game loop
+window.requestAnimationFrame(gameLoop);
+</script>
+</body>
+</html>
