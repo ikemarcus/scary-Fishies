@@ -115,16 +115,16 @@
     }
 
     function jump() {
-      var initialY = playerY;
-      var jumpInterval = setInterval(function() {
-        if (playerY <= initialY -
-        jumpHeight) {
-      clearInterval(jumpInterval);
-    } else {
-      playerY -= playerSpeed * 2;
+    var initialY = playerY;
+    var jumpInterval = setInterval(function() {
+        if (playerY <= initialY - jumpHeight) {
+            clearInterval(jumpInterval);
+            isJumping = false;
+        } else {
+            playerY -= playerSpeed * 2;
+        }
+    }, 10);
     }
-  }, 10);
-}
 
 // Start game loop
 window.requestAnimationFrame(gameLoop);
