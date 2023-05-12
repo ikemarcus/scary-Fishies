@@ -16,6 +16,7 @@
     body {
       background-color: black;
       overflow: hidden;
+      font-family: 'Creepster', cursive;
     }
     
     .instructions {
@@ -162,7 +163,10 @@
     //Posistion enemy
     enemyX += enemySpeed;
     if (enemyX < 0 || enemyX > canvas.width - 80) {
-        enemySpeed = -enemySpeed;
+      enemySpeed = -enemySpeed;
+    }
+    if (Math.random() < 0.04) {
+      enemySpeed = -enemySpeed;
     }
 
 
@@ -196,7 +200,7 @@
       
       // Display game over message
       ctx.fillStyle = "red";
-      ctx.font = "48px Arial";
+      ctx.font = "70px Creepster";
       ctx.fillText("Game Over", canvas.width/2 - 120, canvas.height/2);
     }
 
