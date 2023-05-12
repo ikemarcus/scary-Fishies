@@ -146,57 +146,57 @@
   // Draw player
   ctx.drawImage(playerImage, playerX, playerY, 60, 60);
 
-// Move player
-playerY += playerSpeed;
+  // Move player
+  playerY += playerSpeed;
 
-// Check for collision with platforms
-for (var i = 0; i < platforms.length; i++) {
-  if (playerY + 50 >= platforms[i].y && playerY + 50 <= platforms[i].y + platforms[i].height && playerX + 50 >= platforms[i].x && playerX <= platforms[i].x + platforms[i].width) {
-    isJumping = false;
-    playerY = platforms[i].y - 50;
-    break;
-  }
-}
-
-// Check for collision with bottom of canvas
-if (playerY + 50 >= canvas.height) {
-  isJumping = false;
-  playerY = canvas.height - 50;
-}
-
-  // Redraw canvas
-  window.requestAnimationFrame(gameLoop);
-}
-
-// Event handlers
-function onKeyDown(event) {
-  if (event.keyCode === 37) { // Left arrow
-    playerX -= playerSpeed;
-  } else if (event.keyCode === 39) { // Right arrow
-    playerX += playerSpeed;
-  } else if (event.keyCode === 32) { // Spacebar
-    if (!isJumping) {
-      isJumping = true;
-      jump();
-    }
-  }
-}
-
-function onKeyUp(event) {
-  // TODO: Handle key up events
-}
-
-function jump() {
-  var initialY = playerY;
-  var jumpInterval = setInterval(function() {
-    if (playerY <= initialY - jumpHeight) {
-      clearInterval(jumpInterval);
+  // Check for collision with platforms
+  for (var i = 0; i < platforms.length; i++) {
+    if (playerY + 50 >= platforms[i].y && playerY + 50 <= platforms[i].y + platforms[i].height && playerX + 50 >= platforms[i].x && playerX <= platforms[i].x + platforms[i].width) {
       isJumping = false;
-    } else {
-        playerY -= playerSpeed * 2;
+      playerY = platforms[i].y - 50;
+      break;
     }
-  }, 10);
-}
+  }
+
+  // Check for collision with bottom of canvas
+  if (playerY + 50 >= canvas.height) {
+    isJumping = false;
+    playerY = canvas.height - 50;
+  }
+
+    // Redraw canvas
+    window.requestAnimationFrame(gameLoop);
+  }
+
+  // Event handlers
+  function onKeyDown(event) {
+    if (event.keyCode === 37) { // Left arrow
+      playerX -= playerSpeed;
+    } else if (event.keyCode === 39) { // Right arrow
+      playerX += playerSpeed;
+    } else if (event.keyCode === 32) { // Spacebar
+      if (!isJumping) {
+        isJumping = true;
+        jump();
+      }
+    }
+  }
+
+  function onKeyUp(event) {
+    // TODO: Handle key up events
+  }
+
+  function jump() {
+    var initialY = playerY;
+    var jumpInterval = setInterval(function() {
+      if (playerY <= initialY - jumpHeight) {
+        clearInterval(jumpInterval);
+        isJumping = false;
+      } else {
+          playerY -= playerSpeed * 2;
+      }
+    }, 10);
+  }
 
  
 
