@@ -122,43 +122,51 @@
 
     // Game loop
     function gameLoop() {
-      // Clear canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Draw platforms
-      for (var i = 0; i < platforms.length; i++) {
-        ctx.fillStyle = "darkblue";
-        ctx.fillRect(platforms[i].x, platforms[i].y, platforms[i].width, platforms[i].height);
-      }
-
-      // Draw player
-      ctx.drawImage(playerImage, playerX, playerY, 60, 60);
-
-      // Move player
-      if (isJumping) {
-        playerY -= playerSpeed * 2;
-      } else {
-        playerY += playerSpeed;
-      }
-
-      // Check for collision with platforms
-      for (var i = 0; i < platforms.length; i++) {
-        if (playerY + 50 >= platforms[i].y && playerY + 50 <= platforms[i].y + platforms[i].height && playerX + 50 >= platforms[i].x && playerX <= platforms[i].x + platforms[i].width) {
-          isJumping = false;
-          playerY = platforms[i].y - 50;
-          break;
-        }
-      }
-
-      // Check for collision with bottom of canvas
-      if (playerY + 50 >= canvas.height) {
-        isJumping = false;
-        playerY = canvas.height - 50;
-      }
-
-      // Redraw canvas
-      window.requestAnimationFrame(gameLoop);
+  // Move the platforms and player down
+  var moveDistance = playerSpeed * 0.1;
+  for (var i = 0; i < platforms.length; i++) {
+    platforms[i].y += moveDistance;
+    // Check if the platform is off the bottom of the canvas
+    if (platforms[i].y > canvas.height) {
+      platforms[i].y = Math.random() * -canvas.height; // Move the platform to the top of the canvas
+      platforms[i].x = Math.random() * canvas.width; // Randomize the platform's horizontal position
     }
+  }
+  playerY += moveDistance;
+
+  // Clear canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Draw platforms
+  for (var i = 0; i < platforms.length; i++) {
+    ctx.fillStyle = "darkblue";
+    ctx.fillRect(platforms[i].x, platforms[i].y, platforms[i].width, platforms[i].height);
+  }
+
+  // Draw player
+  ctx.drawImage(playerImage, playerX, playerY, 60, 60);
+
+// Move player
+playerY += playerSpeed;
+
+// Check for collision with platforms
+for (var i = 0; i < platforms.length; i++) {
+  if (playerY + 50 >= platforms[i].y && playerY + 50 <= platforms[i].y + platforms[i].height && playerX + 50 >= platforms[i].x && playerX <= platforms[i].x + platforms[i].width) {
+    isJumping = false;
+    playerY = platforms[i].y - 50;
+    break;
+  }
+}
+
+// Check for collision with bottom of canvas
+if (playerY + 50 >= canvas.height) {
+  isJumping = false;
+  playerY = canvas.height - 50;
+}
+
+  // Redraw canvas
+  window.requestAnimationFrame(gameLoop);
+}
 
     // Event handlers
     function onKeyDown(event) {
