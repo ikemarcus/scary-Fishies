@@ -168,35 +168,35 @@ if (playerY + 50 >= canvas.height) {
   window.requestAnimationFrame(gameLoop);
 }
 
-    // Event handlers
-    function onKeyDown(event) {
-      if (event.keyCode === 37) { // Left arrow
-        playerX -= playerSpeed;
-      } else if (event.keyCode === 39) { // Right arrow
-        playerX += playerSpeed;
-      } else if (event.keyCode === 32) { // Spacebar
-        if (!isJumping) {
-          isJumping = true;
-          jump();
-        }
-      }
+// Event handlers
+function onKeyDown(event) {
+  if (event.keyCode === 37) { // Left arrow
+    playerX -= playerSpeed;
+  } else if (event.keyCode === 39) { // Right arrow
+    playerX += playerSpeed;
+  } else if (event.keyCode === 32) { // Spacebar
+    if (!isJumping) {
+      isJumping = true;
+      jump();
     }
+  }
+}
 
-    function onKeyUp(event) {
-      // TODO: Handle key up events
-    }
+function onKeyUp(event) {
+  // TODO: Handle key up events
+}
 
-    function jump() {
-    var initialY = playerY;
-    var jumpInterval = setInterval(function() {
-        if (playerY <= initialY - jumpHeight) {
-            clearInterval(jumpInterval);
-            isJumping = false;
-        } else {
-            playerY -= playerSpeed * 2;
-        }
-    }, 10);
+function jump() {
+  var initialY = playerY;
+  var jumpInterval = setInterval(function() {
+    if (playerY <= initialY - jumpHeight) {
+      clearInterval(jumpInterval);
+      isJumping = false;
+    } else {
+        playerY -= playerSpeed * 2;
     }
+  }, 10);
+}
 
  
 
