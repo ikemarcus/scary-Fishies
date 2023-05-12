@@ -182,23 +182,23 @@
     }
 
     // Check for collision with enemy
-if (playerY + 50 >= enemyY && playerY <= enemyY + 80 && playerX + 50 >= enemyX && playerX <= enemyX + 80) {
-  gameOver();
-  return;
-}
+    if (playerY + 50 >= enemyY && playerY <= enemyY + 80 && playerX + 50 >= enemyX && playerX <= enemyX + 80) {
+      gameOver();
+      return;
+    }
 
-function gameOver() {
-  // Stop the game loop
-  cancelAnimationFrame(gameLoop);
-  
-  // Clear the canvas
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-  // Display game over message
-  ctx.fillStyle = "red";
-  ctx.font = "48px Arial";
-  ctx.fillText("Game Over", canvas.width/2 - 120, canvas.height/2);
-}
+    function gameOver() {
+      // Stop the game loop
+      cancelAnimationFrame(gameLoop);
+      
+      // Clear the canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Display game over message
+      ctx.fillStyle = "red";
+      ctx.font = "48px Arial";
+      ctx.fillText("Game Over", canvas.width/2 - 120, canvas.height/2);
+    }
 
       // Redraw canvas
       window.requestAnimationFrame(gameLoop);
