@@ -122,17 +122,17 @@
 
     // Game loop
     function gameLoop() {
-  // Move the platforms and player down
-  var moveDistance = playerSpeed * 0.1;
-  for (var i = 0; i < platforms.length; i++) {
-    platforms[i].y += moveDistance;
-    // Check if the platform is off the bottom of the canvas
-    if (platforms[i].y > canvas.height) {
-      platforms[i].y = Math.random() * -canvas.height; // Move the platform to the top of the canvas
-      platforms[i].x = Math.random() * canvas.width; // Randomize the platform's horizontal position
-    }
-  }
-  playerY += moveDistance;
+    // Move the platforms and player down
+    var moveDistance = playerSpeed * 0.1;
+    for (var i = 0; i < platforms.length; i++) {
+      platforms[i].y += moveDistance;
+      // Check if the platform is off the bottom of the canvas
+      if (platforms[i].y > canvas.height) {
+        platforms[i].y = Math.random() * -canvas.height; // Move the platform to the top of the canvas
+        platforms[i].x = Math.random() * canvas.width; // Randomize the platform's horizontal position
+      }
+  	}
+    playerY += moveDistance;
 
   // Clear canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -200,8 +200,8 @@ function jump() {
 
  
 
-// Start game loop
-window.requestAnimationFrame(gameLoop);
-</script>
+  // Start game loop
+  window.requestAnimationFrame(gameLoop);
+  </script>
 </body>
 </html>
