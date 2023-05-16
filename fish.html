@@ -105,20 +105,36 @@
     var jumpCount = 0; // Counter for jumps made
     var platforms = [];
     var gameOver = false;
-    var targetPlayerX = playerX; // New target position for the player
-
+    var isMovingLeft = false;
+    var isMovingRight = false;
+    var jumpSpeed = 0; // Vertical speed during jump
+    var gravity = 0.9; // Gravity value to simulate falling
 
     // Move player left
     function moveLeft() {
-      if (playerX > 0) {
-        playerX -= playerSpeed;
-      }
+      isMovingLeft = true;
     }
 
     // Move player right
     function moveRight() {
-      if (playerX < canvas.width - 60) {
-        playerX += playerSpeed;
+      isMovingRight = true;
+    }
+
+    // Stop moving player left
+    function stopMoveLeft() {
+      isMovingLeft = false;
+    }
+
+    // Stop moving player right
+    function stopMoveRight() {
+      isMovingRight = false;
+    }
+
+    function jump() {
+      if (!isJumping && jumpCount < maxJumps) {
+        isJumping = true;
+        jumpSpeed = -10; // Set the initial jump speed
+        jumpCount++;
       }
     }
 
@@ -151,6 +167,24 @@
       }
       playerY += moveDistance;
 
+      // Apply vertical movement (jump or fall)
+      if (isJumping) {
+        playerY += jumpSpeed; // Apply jump speed to player's vertical position
+        jumpSpeed += gravity; // Apply gravity to gradually decrease the jump speed
+
+        // Check if the player has reached the ground
+        if (playerY >= canvas.height - 50) {
+          playerY = canvas.height - 50; // Set player's position to ground level
+          isJumping = false; // End the jump
+          jumpSpeed = 0; // Reset the jump speed
+          jumpCount = 0; // Reset the jump count
+        }
+      } else {
+        // Apply gravity (falling)
+        playerY += gravity;
+      }
+
+
       // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -169,8 +203,13 @@
         ctx.drawImage(enemyImage, enemies[i].x, enemies[i].y, 80, 80);
       }
 
-      // Move player
-      playerY += playerSpeed;
+      // Move the player
+      if (isMovingLeft && playerX > 0) {
+        playerX -= playerSpeed;
+      }
+      if (isMovingRight && playerX < canvas.width - 60) {
+        playerX += playerSpeed;
+      }
 
       // Move enemies
       for (var i = 0; i < enemies.length; i++) {
@@ -244,7 +283,13 @@
     }
 
     function onKeyUp(event) {
-      // TODO: Handle key up events
+      if (event.keyCode === 37) {
+        // Left arrow
+        stopMoveLeft();
+      } else if (event.keyCode === 39) {
+        // Right arrow
+        stopMoveRight();
+      }
     }
 
     function jump() {
