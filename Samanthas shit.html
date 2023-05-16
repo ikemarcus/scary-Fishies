@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>My Platform Game</title>
+  <link href="https://fonts.googleapis.com/css?family=Creepster&display=swap" rel="stylesheet">
+
+  <style>
+    /* CSS for the game canvas */
+    canvas {
+      border: 1px solid black;
+      background-color: black;
+      border-bottom: 20px solid red!important;
+    }
+
+    body {
+      background-color: black;
+      overflow: hidden;
+      font-family: 'Creepster', cursive;
+    }
+    
+    .instructions {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 36px;
+      font-family: 'Creepster', cursive;
+      color: red;
+      text-shadow: 2px 2px 2px black;
+      text-align: center;
+      animation: fadeOut 25s forwards;
+    }
+
+    @keyframes fadeOut {
+      0% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        display: none;
+      }
+    }
+
+    .key {
+      display: inline-block;
+      border: 4px solid black;
+      border-radius: 10px;
+      padding: 10px 20px;
+      margin: 20px;
+      font-size: 28px;
+      font-family: 'Creepster', cursive;
+      color: black;
+      background-color: #fff;
+      box-shadow: 5px 5px 0 #000;
+    }
+
+    .key.spacebar {
+      background-color: darkred;
+      color: black;
+      text-shadow: none;
+      box-shadow: none;
+      margin-top: -40px;
+    }
+
+    .key.arrow {
+      background-color: red;
+      color: black;
+      text-shadow: none;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- The game canvas -->
+  <canvas id="game-canvas" width="1520" height="730"></canvas>
+
+  <div id="instructions" class="instructions">
+    <p>Use the <span class="key arrow">left</span> and <span class="key arrow">right</span> arrow keys to move.</p>
+    <p>Press the <span class="key spacebar">spacebar</span> to jump.</p>
+  </div>
+
+  <img id="enemy" src="https://th.bing.com/th/id/R.8860b204b6323b0001661e2727cfff3b?rik=MW7sjGPqoKJdlg&pid=ImgRaw&r=0" style="display:none;">
+
+  <script>
+    // Game variables
+    var canvas = document.getElementById("game-canvas");
+    var ctx = canvas.getContext("2d");
+    var playerImage = new Image();
+    playerImage.src = "https://pngimg.com/uploads/goldfish/goldfish_PNG95.png"; 
+    var enemyImage = new Image();
+    enemyImage.src = "https://th.bing.com/th/id/R.8860b204b6323b0001661e2727cfff3b?rik=MW7sjGPqoKJdlg&pid=ImgRaw&r=0";
+    var enemyX = canvas.width / 2;
+    var enemyY = canvas.height - 150;
+    var enemySpeed = 2;
+    var playerX = canvas.width / 2;
+    var playerY = canvas.height - 50;
+    var playerSpeed = 5;
+    var jumpHeight = 100;
+    var isJumping = false;
+    var platforms = [];
+
+    // Move player left
+    function moveLeft() {
+      if (playerX > 0) {
+        playerX -= playerSpeed;
+      }
+    }
+
+    // Move player right
+    function moveRight() {
+      if (playerX < game-canvas.offsetWidth - player.offsetWidth) {
+        playerX += playerSpeed;
+      }
+    }
+
+    // Create platforms
+    for (var i = 0; i < 15; i++) {
+      platforms.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        width: 100,
+        height: 20
+      });
+    }
+
+    // Event listeners
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("keyup", onKeyUp);
+
+    // Game loop
+    function gameLoop() {
+    // Move the platforms and player down
+    var moveDistance = playerSpeed * 0.1;
+    for (var i = 0; i < platforms.length; i++) {
+      platforms[i].y += moveDistance;
+      // Check if the platform is off the bottom of the canvas
+      if (platforms[i].y > canvas.height) {
+        platforms[i].y = Math.random() * -canvas.height; // Move the platform to the top of the canvas
+        platforms[i].x = Math.random() * canvas.width; // Randomize the platform's horizontal position
+      }
+  	}
+    playerY += moveDistance;
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw platforms
+    for (var i = 0; i < platforms.length; i++) {
+      ctx.fillStyle = "darkblue";
+      ctx.fillRect(platforms[i].x, platforms[i].y, platforms[i].width, platforms[i].height);
+    }
+
+    // Draw player
+    ctx.drawImage(playerImage, playerX, playerY, 60, 60);
+
+    // Draw enemy
+    ctx.drawImage(enemyImage, enemyX, enemyY, 80, 80);
+
+    // Move player
+    playerY += playerSpeed;
+
+    //Posistion enemy
+    enemyX += enemySpeed;
+    if (enemyX < 0 || enemyX > canvas.width - 80) {
+      enemySpeed = -enemySpeed;
+    }
+    if (Math.random() < 0.03) {
+      enemySpeed = -enemySpeed;
+    }
+
+
+    // Check for collision with platforms
+    for (var i = 0; i < platforms.length; i++) {
+      if (playerY + 50 >= platforms[i].y && playerY + 50 <= platforms[i].y + platforms[i].height && playerX + 50 >= platforms[i].x && playerX <= platforms[i].x + platforms[i].width) {
+        isJumping = false;
+        playerY = platforms[i].y - 50;
+        break;
+      }
+    }
+
+    // Check for collision with bottom of canvas
+    if (playerY + 50 >= canvas.height) {
+      isJumping = false;
+      playerY = canvas.height - 50;
+    }
+
+    // Check for collision with enemy
+    if (playerY + 50 >= enemyY && playerY <= enemyY + 80 && playerX + 50 >= enemyX && playerX <= enemyX + 80) {
+      gameOver();
+      return;
+    }
+
+    function gameOver() {
+      // Stop the game loop
+      cancelAnimationFrame(gameLoop);
+      
+      // Clear the canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Display game over message
+      ctx.fillStyle = "red";
+      ctx.font = "70px Creepster";
+      ctx.fillText("Game Over", canvas.width/2 - 120, canvas.height/2);
+    }
+
+      // Redraw canvas
+      window.requestAnimationFrame(gameLoop);
+    }
+
+    // Event handlers
+    function onKeyDown(event) {
+      if (event.keyCode === 37) { // Left arrow
+        playerX -= playerSpeed;
+      } else if (event.keyCode === 39) { // Right arrow
+        playerX += playerSpeed;
+      } else if (event.keyCode === 32) { // Spacebar
+        if (!isJumping) {
+          isJumping = true;
+          jump();
+        }
+      }
+    }
+
+    function onKeyUp(event) {
+      // TODO: Handle key up events
+    }
+
+    function jump() {
+      var initialY = playerY;
+      var jumpInterval = setInterval(function() {
+        if (playerY <= initialY - jumpHeight) {
+          clearInterval(jumpInterval);
+          isJumping = false;
+        } else {
+            playerY -= playerSpeed * 2;
+        }
+      }, 10);
+    }
+
+
+    // Start game loop
+    window.requestAnimationFrame(gameLoop);
+  </script>
+</body>
+</html>
