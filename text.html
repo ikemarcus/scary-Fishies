@@ -60,10 +60,12 @@
     const door = document.getElementById('door');
     let playerX = 0;
     let playerY = 0;
-    const playerSpeed = 20;
+    const playerSpeed = 5;
     const jumpHeight = 100;
     let isJumping = false;
     let isFalling = false;
+    let isMovingLeft = false;
+    let isMovingRight = false;
 
     const platforms = [
       { element: document.getElementById('platform1'), top: 50, left: 100, width: 200, height: 20 },
@@ -72,6 +74,14 @@
 
     // Game loop
     function gameLoop() {
+      // Move player based on arrow key flags
+      if (isMovingLeft) {
+        moveLeft();
+      }
+      if (isMovingRight) {
+        moveRight();
+      }
+
       // Move player
       player.style.left = playerX + 'px';
       player.style.bottom = playerY + 'px';
@@ -95,7 +105,7 @@
       // Check for collision with door
       if (isColliding(player, door)) {
         // Redirect to another HTML page
-        window.location.href = 'fish.html';
+        window.location.href = 'another_page.html';
       }
 
       // Request next frame
@@ -103,22 +113,22 @@
     }
 
     // Function to check collision between two elements
-    function isColliding(element1, element2) {
-      const rect1 = element1.getBoundingClientRect();
-      const rect2 = element2.getBoundingClientRect();
+function isColliding(element1, element2) {
+const rect1 = element1.getBoundingClientRect();
+const rect2 = element2.getBoundingClientRect();
 
-      return !(
-        rect1.right < rect2.left ||
-        rect1.left > rect2.right ||
-        rect1.bottom < rect2.top ||
-        rect1.top > rect2.bottom
-      );
-    }
 
-    // Move player left
-    function moveLeft() {
-      playerX -= player
-Speed;
+  return !(
+    rect1.right < rect2.left ||
+    rect1.left > rect2.right ||
+    rect1.bottom < rect2.top ||
+    rect1.top > rect2.bottom
+  );
+}
+
+// Move player left
+function moveLeft() {
+  playerX -= playerSpeed;
 }
 
 // Move player right
@@ -158,12 +168,20 @@ function jump() {
 
 // Add event listeners for arrow keys and spacebar
 document.addEventListener('keydown', function(event) {
-  if (event.code === 'ArrowLeft') {
-    moveLeft();
-  } else if (event.code === 'ArrowRight') {
-    moveRight();
+  if (event.key === 'ArrowLeft') {
+    isMovingLeft = true;
+  } else if (event.key === 'ArrowRight') {
+    isMovingRight = true;
   } else if (event.code === 'Space') {
     jump();
+  }
+});
+
+document.addEventListener('keyup', function(event) {
+  if (event.key === 'ArrowLeft') {
+    isMovingLeft = false;
+  } else if (event.key === 'ArrowRight') {
+    isMovingRight = false;
   }
 });
 
