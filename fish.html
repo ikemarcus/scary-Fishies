@@ -104,6 +104,7 @@
     var maxJumps = 2;  // Maximum number of jumps allowed
     var jumpCount = 0; // Counter for jumps made
     var platforms = [];
+    var gameOver = false;
 
     // Move player left
     function moveLeft() {
@@ -114,7 +115,7 @@
 
     // Move player right
     function moveRight() {
-      if (playerX < game-canvas.offsetWidth - player.offsetWidth) {
+      if (playerX < canvas.width - 60) {
         playerX += playerSpeed;
       }
     }
@@ -132,108 +133,107 @@
     // Event listeners
     document.addEventListener("keydown", onKeyDown);
     document.addEventListener("keyup", onKeyUp);
+    canvas.addEventListener("click", onCanvasClick);
 
     // Game loop
     function gameLoop() {
-    // Move the platforms and player down
-    var moveDistance = playerSpeed * 0.1;
-    for (var i = 0; i < platforms.length; i++) {
-      platforms[i].y += moveDistance;
-      // Check if the platform is off the bottom of the canvas
-      if (platforms[i].y > canvas.height) {
-        platforms[i].y = Math.random() * -canvas.height; // Move the platform to the top of the canvas
-        platforms[i].x = Math.random() * canvas.width; // Randomize the platform's horizontal position
+      // Move the platforms and player down
+      var moveDistance = playerSpeed * 0.1;
+      for (var i = 0; i < platforms.length; i++) {
+        platforms[i].y += moveDistance;
+        // Check if the platform is off the bottom of the canvas
+        if (platforms[i].y > canvas.height) {
+          platforms[i].y = Math.random() * -canvas.height; // Move the platform to the top of the canvas
+          platforms[i].x = Math.random() * canvas.width; // Randomize the platform's horizontal position
+        }
       }
-  	}
-    playerY += moveDistance;
+      playerY += moveDistance;
 
-    // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // Clear canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw platforms
-    for (var i = 0; i < platforms.length; i++) {
-      ctx.fillStyle = "darkblue";
-      ctx.fillRect(platforms[i].x, platforms[i].y, platforms[i].width, platforms[i].height);
-    }
+      // Draw platforms
+      for (var i = 0; i < platforms.length; i++) {
+        ctx.fillStyle = "darkblue";
+        ctx.fillRect
+        (platforms[i].x, platforms[i].y, platforms[i].width, platforms[i].height);
+      }
 
-    // Draw player
-    ctx.drawImage(playerImage, playerX, playerY, 60, 60);
+      // Draw player
+      ctx.drawImage(playerImage, playerX, playerY, 60, 60);
 
       // Draw enemies
       for (var i = 0; i < enemies.length; i++) {
-        ctx.drawImage(enemyImage, enemies[i].
-      x, enemies[i].y, 80, 80);
+        ctx.drawImage(enemyImage, enemies[i].x, enemies[i].y, 80, 80);
       }
 
-    // Move player
-    playerY += playerSpeed;
+      // Move player
+      playerY += playerSpeed;
 
-  // Move enemies
-  for (var i = 0; i < enemies.length; i++) {
-    enemies[i].x += enemies[i].speed;
-    if (enemies[i].x < 0 || enemies[i].x > canvas.width - 80) {
-      enemies[i].speed = -enemies[i].speed;
-    }
-    if (Math.random() < 0.01) {
-      enemies[i].speed = -enemies[i].speed;
-    }
-  }
+      // Move enemies
+      for (var i = 0; i < enemies.length; i++) {
+        enemies[i].x += enemies[i].speed;
+        if (enemies[i].x < 0 || enemies[i].x > canvas.width - 80) {
+          enemies[i].speed = -enemies[i].speed;
+        }
+        if (Math.random() < 0.01) {
+          enemies[i].speed = -enemies[i].speed;
+        }
+      }
 
+      // Check for collision with platforms
+      for (var i = 0; i < platforms.length; i++) {
+        if (
+          playerY + 50 >= platforms[i].y &&
+          playerY + 50 <= platforms[i].y + platforms[i].height &&
+          playerX + 50 >= platforms[i].x &&
+          playerX <= platforms[i].x + platforms[i].width
+        ) {
+          isJumping = false;
+          playerY = platforms[i].y - 50;
+          jumpCount = 0; // Reset jump count when player lands on a platform
+          break;
+        }
+      }
 
-    // Check for collision with platforms
-    for (var i = 0; i < platforms.length; i++) {
-    if (
-      playerY + 50 >= platforms[i].y &&
-      playerY + 50 <= platforms[i].y + platforms[i].height &&
-      playerX + 50 >= platforms[i].x &&
-      playerX <= platforms[i].x + platforms[i].width
-    ) {
-      isJumping = false;
-      playerY = platforms[i].y - 50;
-      jumpCount = 0; // Reset jump count when player lands on a platform
-      break;
-    }
-  }
+      // Check for collision with bottom of canvas
+      if (playerY + 50 >= canvas.height) {
+        isJumping = false;
+        playerY = canvas.height - 50;
+        jumpCount = 0; // Reset jump count when player lands on the ground
+      }
 
-    // Check for collision with bottom of canvas
-    if (playerY + 50 >= canvas.height) {
-    isJumping = false;
-    playerY = canvas.height - 50;
-    jumpCount = 0; // Reset jump count when player lands on the ground
-    }
+      // Check for collision with enemy
+      for (var i = 0; i < enemies.length; i++) {
+        if (
+          playerY + 50 >= enemies[i].y &&
+          playerY <= enemies[i].y + 80 &&
+          playerX + 50 >= enemies[i].x &&
+          playerX <= enemies[i].x + 80
+        ) {
+          gameOver = true;
+          break;
+        }
+      }
 
-    // Check for collision with enemy
-    for (var i = 0; i < enemies.length; i++) {
-    if (playerY + 50 >= enemies[i].y && playerY <= enemies[i].y + 80 && playerX + 50 >= enemies[i].x && playerX <= enemies[i].x + 80) {
-      gameOver();
-      return;
-    }
-  }
-
-    function gameOver() {
-      // Stop the game loop
-      cancelAnimationFrame(gameLoop);
-      
-      // Clear the canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      // Display game over message
-      ctx.fillStyle = "red";
-      ctx.font = "70px Creepster";
-      ctx.fillText("Game Over", canvas.width/2 - 120, canvas.height/2);
-    }
-
-      // Redraw canvas
-      window.requestAnimationFrame(gameLoop);
+      if (gameOver) {
+        showGameOverScreen();
+      } else {
+        // Redraw canvas
+        window.requestAnimationFrame(gameLoop);
+      }
     }
 
     // Event handlers
     function onKeyDown(event) {
-      if (event.keyCode === 37) { // Left arrow
-        playerX -= playerSpeed;
-      } else if (event.keyCode === 39) { // Right arrow
-        playerX += playerSpeed;
-      } else if (event.keyCode === 32) { // Spacebar
+      if (event.keyCode === 37) {
+        // Left arrow
+        moveLeft();
+      } else if (event.keyCode === 39) {
+        // Right arrow
+        moveRight();
+      } else if (event.keyCode === 32) {
+        // Spacebar
         if (!isJumping && jumpCount < maxJumps) {
           isJumping = true;
           jump();
@@ -249,18 +249,60 @@
       var initialY = playerY;
       var jumpInterval = setInterval(function () {
         if (playerY <= initialY - jumpHeight) {
-            clearInterval(jumpInterval);
-            isJumping = false;
-            jumpCount++; // Increment jump count
+          clearInterval(jumpInterval);
+          isJumping = false;
+          jumpCount++; // Increment jump count
         } else {
-            playerY -= playerSpeed * 2;
+          playerY -= playerSpeed * 2;
         }
       }, 10);
     }
 
+    function onCanvasClick(event) {
+      if (gameOver) {
+        startGame();
+      }
+    }
 
-    // Start game loop
+    function startGame() {
+      gameOver = false;
+      playerX = canvas.width / 2;
+      playerY = canvas.height -
+    50;
+    jumpCount = 0;
     window.requestAnimationFrame(gameLoop);
+    }
+
+
+    function showGameOverScreen() {
+      // Clear the canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Display game over message
+      var gameOverText = "Game Over";
+      var gameOverTextWidth = ctx.measureText(gameOverText).width;
+      var gameOverTextX = canvas.width / 2.37 - gameOverTextWidth / 6;
+      var gameOverTextY = canvas.height / 2 - 70; // Adjust the vertical position
+
+      ctx.fillStyle = "darkred";
+      ctx.font = "70px Creepster";
+      ctx.fillText(gameOverText, gameOverTextX, gameOverTextY);
+
+      // Display start over button
+      var buttonWidth = 200;
+      var buttonHeight = 50;
+      var buttonX = canvas.width / 2 - buttonWidth / 2;
+      var buttonY = canvas.height / 2 - buttonHeight / 2; // Adjust the vertical position
+
+      ctx.fillStyle = "black";
+      ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+      ctx.fillStyle = "red";
+      ctx.font = "30px Creepster";
+      ctx.fillText("Start Over", buttonX + 45, buttonY + 30); // Adjust the text position
+    }
+
+    // Start game
+    startGame();
   </script>
 </body>
 </html>
