@@ -35,6 +35,15 @@
       bottom: 150px;
       left: 500px;
     }
+
+    #door {
+      width: 50px;
+      height: 100px;
+      background-color: brown;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+    }
   </style>
 </head>
 <body>
@@ -42,11 +51,13 @@
         <div id="platform1" class="platform"></div>
         <div id="platform2" class="platform"></div>
         <div id="player"></div>
-      </div>
+        <div id="door"></div>
+    </div>
 
   <script>
     const gameArea = document.getElementById('gameArea');
     const player = document.getElementById('player');
+    const door = document.getElementById('door');
     let playerX = 0;
     let playerY = 0;
     const playerSpeed = 5;
@@ -81,63 +92,83 @@
         isJumping = false;
       }
 
+      // Check for collision with door
+      if (isColliding(player, door)) {
+        // Redirect to another HTML page
+        window.location.href = 'fish.html';
+      }
+
       // Request next frame
       window.requestAnimationFrame(gameLoop);
     }
-    
+
+    // Function to check collision between two elements
+    function isColliding(element1, element2) {
+      const rect1 = element1.getBoundingClientRect();
+      const rect2 = element2.getBoundingClientRect();
+
+      return !(
+        rect1.right < rect2.left ||
+        rect1.left > rect2.right ||
+        rect1.bottom < rect2.top ||
+        rect1.top > rect2.bottom
+      );
+    }
+
     // Move player left
     function moveLeft() {
-      playerX -= playerSpeed;
-    }
+      playerX -= player
+Speed;
+}
 
-    // Move player right
-    function moveRight() {
-      playerX += playerSpeed;
-    }
+// Move player right
+function moveRight() {
+  playerX += playerSpeed;
+}
 
-    // Make player jump
-    function jump() {
-      if (isJumping || isFalling) {
-        return;
+// Make player jump
+function jump() {
+  if (isJumping || isFalling) {
+    return;
+  }
+
+  isJumping = true;
+
+  let jumpInterval = setInterval(function() {
+    if (playerY >= jumpHeight) {
+      clearInterval(jumpInterval);
+      isFalling = true;
+    } else {
+      playerY += playerSpeed * 2;
+    }
+  }, 10);
+
+  setTimeout(function() {
+    let fallInterval = setInterval(function() {
+      if (playerY <= 0) {
+        clearInterval(fallInterval);
+        isJumping = false;
+        isFalling = false;
+      } else {
+        playerY -= playerSpeed * 2;
       }
+    }, 10);
+  }, 500);
+}
 
-      isJumping = true;
+// Add event listeners for arrow keys and spacebar
+document.addEventListener('keydown', function(event) {
+  if (event.code === 'ArrowLeft') {
+    moveLeft();
+  } else if (event.code === 'ArrowRight') {
+    moveRight();
+  } else if (event.code === 'Space') {
+    jump();
+  }
+});
 
-      let jumpInterval = setInterval(function() {
-        if (playerY >= jumpHeight) {
-          clearInterval(jumpInterval);
-          isFalling = true;
-        } else {
-          playerY += playerSpeed * 2;
-        }
-      }, 10);
-
-      setTimeout(function() {
-        let fallInterval = setInterval(function() {
-          if (playerY <= 0) {
-            clearInterval(fallInterval);
-            isJumping = false;
-            isFalling = false;
-          } else {
-            playerY -= playerSpeed * 2;
-          }
-        }, 10);
-      }, 500);
-    }
-
-    // Add event listeners for arrow keys and spacebar
-    document.addEventListener('keydown', function(event) {
-      if (event.code === 'ArrowLeft') {
-        moveLeft();
-      } else if (event.code === 'ArrowRight') {
-        moveRight();
-      } else if (event.code === 'Space') {
-        jump();
-      }
-    });
-
-    // Start game loop
-    window.requestAnimationFrame(gameLoop);
+// Start game loop
+window.requestAnimationFrame(gameLoop);
   </script>
 </body>
 </html>
