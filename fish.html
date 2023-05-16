@@ -182,12 +182,18 @@
 
     // Check for collision with platforms
     for (var i = 0; i < platforms.length; i++) {
-      if (playerY + 50 >= platforms[i].y && playerY + 50 <= platforms[i].y + platforms[i].height && playerX + 50 >= platforms[i].x && playerX <= platforms[i].x + platforms[i].width) {
-        isJumping = false;
-        playerY = platforms[i].y - 50;
-        break;
-      }
+    if (
+      playerY + 50 >= platforms[i].y &&
+      playerY + 50 <= platforms[i].y + platforms[i].height &&
+      playerX + 50 >= platforms[i].x &&
+      playerX <= platforms[i].x + platforms[i].width
+    ) {
+      isJumping = false;
+      playerY = platforms[i].y - 50;
+      jumpCount = 0; // Reset jump count when player lands on a platform
+      break;
     }
+  }
 
     // Check for collision with bottom of canvas
     if (playerY + 50 >= canvas.height) {
