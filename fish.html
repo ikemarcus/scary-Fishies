@@ -99,11 +99,12 @@
     var playerX = canvas.width / 2;
     var playerY = canvas.height - 50;
     var playerSpeed = 5;
-    var jumpHeight = 100;
+    var jumpHeight = 150;
     var isJumping = false;
     var maxJumps = 2;  // Maximum number of jumps allowed
     var jumpCount = 0; // Counter for jumps made
     var platforms = [];
+    var gameOver = false;
 
     // Move player left
     function moveLeft() {
@@ -246,17 +247,17 @@
     }
 
     function jump() {
-  var initialY = playerY;
-  var jumpInterval = setInterval(function () {
-    if (playerY <= initialY - jumpHeight) {
-      clearInterval(jumpInterval);
-      isJumping = false;
-      jumpCount++; // Increment jump count
-    } else {
-      playerY -= playerSpeed * 2;
+      var initialY = playerY;
+      var jumpInterval = setInterval(function () {
+        if (playerY <= initialY - jumpHeight) {
+            clearInterval(jumpInterval);
+            isJumping = false;
+            jumpCount++; // Increment jump count
+        } else {
+            playerY -= playerSpeed * 2;
+        }
+      }, 10);
     }
-  }, 10);
-}
 
 
     // Start game loop
