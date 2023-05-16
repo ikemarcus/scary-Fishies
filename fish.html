@@ -29,7 +29,7 @@
       color: red;
       text-shadow: 2px 2px 2px black;
       text-align: center;
-      animation: fadeOut 25s forwards;
+      animation: fadeOut 20s forwards;
     }
 
     @keyframes fadeOut {
@@ -93,13 +93,16 @@
     var enemies = [
       { x: canvas.width / 2, y: canvas.height - 150, speed: 2 },
       { x: canvas.width / 2, y: canvas.height - 300, speed: 4 },
-      { x: canvas.width / 2, y: canvas.height - 450, speed: 6 }
+      { x: canvas.width / 2, y: canvas.height - 450, speed: 6 },
+      { x: canvas.width / 2, y: canvas.height - 600, speed: 8 }
     ];
     var playerX = canvas.width / 2;
     var playerY = canvas.height - 50;
     var playerSpeed = 5;
     var jumpHeight = 100;
     var isJumping = false;
+    var maxJumps = 2;  // Maximum number of jumps allowed
+    var jumpCount = 0; // Counter for jumps made
     var platforms = [];
 
     // Move player left
@@ -188,8 +191,9 @@
 
     // Check for collision with bottom of canvas
     if (playerY + 50 >= canvas.height) {
-      isJumping = false;
-      playerY = canvas.height - 50;
+    isJumping = false;
+    playerY = canvas.height - 50;
+    jumpCount = 0; // Reset jump count when player lands on the ground
     }
 
     // Check for collision with enemy
@@ -217,8 +221,6 @@
       window.requestAnimationFrame(gameLoop);
     }
 
-    
-
     // Event handlers
     function onKeyDown(event) {
       if (event.keyCode === 37) { // Left arrow
@@ -226,7 +228,7 @@
       } else if (event.keyCode === 39) { // Right arrow
         playerX += playerSpeed;
       } else if (event.keyCode === 32) { // Spacebar
-        if (!isJumping) {
+        if (!isJumping && jumpCount < maxJumps) {
           isJumping = true;
           jump();
         }
@@ -238,16 +240,17 @@
     }
 
     function jump() {
-      var initialY = playerY;
-      var jumpInterval = setInterval(function() {
-        if (playerY <= initialY - jumpHeight) {
-          clearInterval(jumpInterval);
-          isJumping = false;
-        } else {
-            playerY -= playerSpeed * 2;
-        }
-      }, 10);
+  var initialY = playerY;
+  var jumpInterval = setInterval(function () {
+    if (playerY <= initialY - jumpHeight) {
+      clearInterval(jumpInterval);
+      isJumping = false;
+      jumpCount++; // Increment jump count
+    } else {
+      playerY -= playerSpeed * 2;
     }
+  }, 10);
+}
 
 
     // Start game loop
