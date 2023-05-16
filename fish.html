@@ -90,9 +90,11 @@
     playerImage.src = "https://pngimg.com/uploads/goldfish/goldfish_PNG95.png"; 
     var enemyImage = new Image();
     enemyImage.src = "https://th.bing.com/th/id/R.8860b204b6323b0001661e2727cfff3b?rik=MW7sjGPqoKJdlg&pid=ImgRaw&r=0";
-    var enemyX = canvas.width / 2;
-    var enemyY = canvas.height - 150;
-    var enemySpeed = 2;
+    var enemies = [
+      { x: canvas.width / 2, y: canvas.height - 150, speed: 2 },
+      { x: canvas.width / 2, y: canvas.height - 300, speed: 4 },
+      { x: canvas.width / 2, y: canvas.height - 450, speed: 6 }
+    ];
     var playerX = canvas.width / 2;
     var playerY = canvas.height - 50;
     var playerSpeed = 5;
@@ -154,20 +156,25 @@
     // Draw player
     ctx.drawImage(playerImage, playerX, playerY, 60, 60);
 
-    // Draw enemy
-    ctx.drawImage(enemyImage, enemyX, enemyY, 80, 80);
+      // Draw enemies
+      for (var i = 0; i < enemies.length; i++) {
+        ctx.drawImage(enemyImage, enemies[i].
+      x, enemies[i].y, 80, 80);
+      }
 
     // Move player
     playerY += playerSpeed;
 
-    //Posistion enemy
-    enemyX += enemySpeed;
-    if (enemyX < 0 || enemyX > canvas.width - 80) {
-      enemySpeed = -enemySpeed;
+  // Move enemies
+  for (var i = 0; i < enemies.length; i++) {
+    enemies[i].x += enemies[i].speed;
+    if (enemies[i].x < 0 || enemies[i].x > canvas.width - 80) {
+      enemies[i].speed = -enemies[i].speed;
     }
     if (Math.random() < 0.03) {
-      enemySpeed = -enemySpeed;
+      enemies[i].speed = -enemies[i].speed;
     }
+  }
 
 
     // Check for collision with platforms
@@ -186,10 +193,12 @@
     }
 
     // Check for collision with enemy
-    if (playerY + 50 >= enemyY && playerY <= enemyY + 80 && playerX + 50 >= enemyX && playerX <= enemyX + 80) {
+    for (var i = 0; i < enemies.length; i++) {
+    if (playerY + 50 >= enemies[i].y && playerY <= enemies[i].y + 80 && playerX + 50 >= enemies[i].x && playerX <= enemies[i].x + 80) {
       gameOver();
       return;
     }
+  }
 
     function gameOver() {
       // Stop the game loop
