@@ -240,7 +240,9 @@
 
       // Check for collision with top of the canvas
       if (playerY <= 0) {
+        playerY = 0;
         showYouWinScreen();
+        // You can add any additional logic here if needed
       }
 
       // Check for collision with bottom of canvas
@@ -359,24 +361,22 @@
       // Display "You Win" message
       var youWinText = "You Win!";
       var youWinTextWidth = ctx.measureText(youWinText).width;
-      var youWinTextX = canvas.width / 2.37 - youWinTextWidth / 6.5;
+      var youWinTextX = (canvas.width - youWinTextWidth) / 2; // Center the text horizontally
       var youWinTextY = canvas.height / 2 - 70; // Adjust the vertical position
 
       ctx.fillStyle = "darkgreen";
       ctx.font = "70px Creepster";
       ctx.fillText(youWinText, youWinTextX, youWinTextY);
 
-      // Display start over button
-      var buttonWidth = 200;
-      var buttonHeight = 50;
-      var buttonX = canvas.width / 2 - buttonWidth / 2;
-      var buttonY = canvas.height / 2 - buttonHeight / 2; // Adjust the vertical position
+      // Display credit text
+      var creditText = "Made By: Samantha & Ike";
+      var creditTextWidth = ctx.measureText(creditText).width;
+      var creditTextX = (canvas.width - creditTextWidth) / 1.5; // Center the text horizontally
+      var creditTextY = canvas.height / 2 + 30; // Position in the middle vertically
 
-      ctx.fillStyle = "black";
-      ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
-      ctx.fillStyle = "green";
+      ctx.fillStyle = "white";
       ctx.font = "30px Creepster";
-      ctx.fillText("Start Over", buttonX + 45, buttonY + 30); // Adjust the text position
+      ctx.fillText(creditText, creditTextX, creditTextY);
     }
 
     startGame();
