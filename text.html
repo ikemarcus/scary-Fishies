@@ -3,11 +3,25 @@
 <head>
   <title>Platform Game Prototype</title>
   <style>
+    body{
+      background-color: black;
+    }
+     
     #gameArea {
       width: 1520px;
       height: 730px;
-      background-color: lightblue;
       position: relative;
+      background-color: black;
+    }
+
+    #backgroundLayer {
+      width: 90%;
+      height: 100%;
+      background-image: url('BGS2.png');
+      background-repeat: no-repeat;
+      background-size: cover;
+      position: absolute;
+      z-index: 0;
     }
 
     #player {
@@ -45,14 +59,16 @@
       right: 0;
     }
   </style>
+  <link rel="icon" type="image/png" href="The storry.png"/>
 </head>
 <body>
-    <div id="gameArea">
-        <div id="platform1" class="platform"></div>
-        <div id="platform2" class="platform"></div>
-        <div id="player"></div>
-        <div id="door"></div>
-    </div>
+  <div id="gameArea">
+    <div id="backgroundLayer"></div>
+    <div id="platform1" class="platform"></div>
+    <div id="platform2" class="platform"></div>
+    <div id="player"></div>
+    <div id="door"></div>
+  </div>
 
   <script>
     const gameArea = document.getElementById('gameArea');
