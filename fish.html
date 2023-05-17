@@ -361,20 +361,20 @@
       // Display "You Win" message
       var youWinText = "You Win!";
       var youWinTextWidth = ctx.measureText(youWinText).width;
-      var youWinTextX = (canvas.width - youWinTextWidth) / 2; // Center the text horizontally
+      var youWinTextX = (canvas.width - youWinTextWidth) / 2.15; // Center the text horizontally
       var youWinTextY = canvas.height / 2 - 70; // Adjust the vertical position
 
-      ctx.fillStyle = "darkgreen";
+      ctx.fillStyle = "green";
       ctx.font = "70px Creepster";
       ctx.fillText(youWinText, youWinTextX, youWinTextY);
 
       // Display credit text
       var creditText = "Made By: Samantha & Ike";
       var creditTextWidth = ctx.measureText(creditText).width;
-      var creditTextX = (canvas.width - creditTextWidth) / 1.5; // Center the text horizontally
-      var creditTextY = canvas.height / 2 + 30; // Position in the middle vertically
+      var creditTextX = 20; // Position in the left corner
+      var creditTextY = canvas.height - 20; // Position at the bottom of the canvas
 
-      ctx.fillStyle = "white";
+      ctx.fillStyle = "darkgreen";
       ctx.font = "30px Creepster";
       ctx.fillText(creditText, creditTextX, creditTextY);
     }
