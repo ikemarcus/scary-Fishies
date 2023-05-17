@@ -155,7 +155,6 @@
 
     // Game loop
     function gameLoop() {
-      // Move the platforms and player down
       var moveDistance = playerSpeed * 0.1;
       for (var i = 0; i < platforms.length; i++) {
         platforms[i].y += moveDistance;
@@ -165,19 +164,16 @@
           platforms[i].x = Math.random() * canvas.width; // Randomize the platform's horizontal position
         }
       }
-      playerY += moveDistance;
 
       // Apply vertical movement (jump or fall)
       if (isJumping) {
         playerY += jumpSpeed; // Apply jump speed to player's vertical position
-        jumpSpeed += gravity; // Apply gravity to gradually decrease the jump speed
+        jumpSpeed += gravity; // Apply gravity to gradually increase the jump speed
 
-        // Check if the player has reached the ground
-        if (playerY >= canvas.height - 50) {
-          playerY = canvas.height - 50; // Set player's position to ground level
+        // Check if the player has reached the peak of the jump
+        if (jumpSpeed >= 0) {
           isJumping = false; // End the jump
           jumpSpeed = 0; // Reset the jump speed
-          jumpCount = 0; // Reset the jump count
         }
       } else {
         // Apply gravity (falling)
