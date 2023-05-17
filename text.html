@@ -30,6 +30,7 @@
       position: absolute;
       bottom: 0;
       left: 0;
+  transform: translate3d(0, 0, 0); /* Enable sub-pixel rendering */
     }
 
     .platform {
@@ -70,68 +71,96 @@
   </div>
 
   <script>
-    const gameArea = document.getElementById('gameArea');
-    const player = document.getElementById('player');
-    const door = document.getElementById('door');
-    let playerX = 0;
-    let playerY = 0;
-    const playerSpeed = 20;
-    const jumpHeight = 100;
-    let isJumping = false;
-    let isFalling = false;
-    let isMovingLeft = false;
-    let isMovingRight = false;
+const gameArea = document.getElementById('gameArea');
+const player = document.getElementById('player');
+const door = document.getElementById('door');
+let playerX = 0;
+let playerY = gameArea.offsetHeight - player.offsetHeight; // Set initial position to the bottom of the canvas
+const maxMovementPerFrame = 50; // Adjust the maximum movement distance per frame as needed
+const jumpHeight = 200;
+let isJumping = false;
+let isFalling = false;
+let isMovingLeft = false;
+let isMovingRight = false;
 
-    const platforms = [
-      { element: document.getElementById('platform1'), top: 50, left: 100, width: 200, height: 20 },
-      { element: document.getElementById('platform2'), top: 150, left: 500, width: 200, height: 20 },
-    ];
+const platforms = [
+  { element: document.getElementById('platform1'), top: 50, left: 100, width: 200, height: 20 },
+  { element: document.getElementById('platform2'), top: 150, left: 500, width: 200, height: 20 },
+];
 
-    // Game loop
-    function gameLoop() {
-      // Move player based on arrow key flags
-      if (isMovingLeft) {
-        moveLeft();
-      }
-      if (isMovingRight) {
-        moveRight();
-      }
+let movementX = 0;
+let lastFrameTime = performance.now();
 
-      // Move player
-      player.style.left = playerX + 'px';
-      player.style.bottom = playerY + 'px';
+// Game loop
+function gameLoop() {
+  const currentTime = performance.now();
+  const deltaTime = (currentTime - lastFrameTime) / 1000; // Convert delta time to seconds
+  lastFrameTime = currentTime;
 
-      // Check for collision with game area boundaries
-      if (playerX < 0) {
-        playerX = 0;
-      }
-      if (playerX > gameArea.offsetWidth - player.offsetWidth) {
-        playerX = gameArea.offsetWidth - player.offsetWidth;
-      }
-      if (playerY < 0) {
-        playerY = 0;
-        isFalling = false;
-      }
-      if (playerY > gameArea.offsetHeight - player.offsetHeight) {
-        playerY = gameArea.offsetHeight - player.offsetHeight;
-        isJumping = false;
-      }
+  // Move player based on arrow key flags
+  if (isMovingLeft) {
+    movementX = -maxMovementPerFrame;
+  } else if (isMovingRight) {
+    movementX = maxMovementPerFrame;
+  } else {
+    movementX = 0;
+  }
 
-      // Check for collision with door
-      if (isColliding(player, door)) {
-        // Redirect to another HTML page
-        window.location.href = 'fish.html';
-      }
+  // Apply movement to player
+  playerX += movementX * deltaTime; // Multiply movement by deltaTime
 
-      // Request next frame
-      window.requestAnimationFrame(gameLoop);
+  // Apply gravity when not jumping or falling
+  if (!isJumping && !isFalling) {
+    applyGravity();
+  }
+
+  // Move player
+  player.style.left = playerX + 'px';
+  player.style.top = playerY + 'px';
+
+  // Check for collision with game area boundaries
+  if (playerX < 0) {
+    playerX = 0;
+  }
+  if (playerX > gameArea.offsetWidth - player.offsetWidth) {
+    playerX = gameArea.offsetWidth - player.offsetWidth;
+  }
+  if (playerY < 0) {
+    playerY = 0;
+  }
+  if (playerY > gameArea.offsetHeight - player.offsetHeight) {
+    playerY = gameArea.offsetHeight - player.offsetHeight;
+    isJumping = false;
+    isFalling = false;
+  }
+
+  // Check for collision with platforms
+  let isOnPlatform = false;
+  platforms.forEach(platform => {
+    if (isColliding(player, platform.element)) {
+      isOnPlatform = true;
     }
+  });
 
-    // Function to check collision between two elements
+  // Apply falling when not colliding with any platform
+  if (!isOnPlatform && !isJumping) {
+    applyFalling();
+  }
+
+  // Check for collision with door
+  if (isColliding(player, door)) {
+    // Redirect to another HTML page
+    window.location.href = 'fish.html';
+  }
+
+  // Request next frame
+  setTimeout(gameLoop, 0);
+}
+
+// Function to check collision between two elements
 function isColliding(element1, element2) {
-const rect1 = element1.getBoundingClientRect();
-const rect2 = element2.getBoundingClientRect();
-
+  const rect1 = element1.getBoundingClientRect();
+  const rect2 = element2.getBoundingClientRect();
 
   return !(
     rect1.right < rect2.left ||
@@ -151,34 +180,36 @@ function moveRight() {
   playerX += playerSpeed;
 }
 
+// Apply gravity to the player
+function applyGravity() {
+  if (playerY < gameArea.offsetHeight - player.offsetHeight) {
+    playerY += playerSpeed;
+    isFalling = true;
+  }
+}
+
+// Apply falling to the player
+function applyFalling() {
+  if (playerY < gameArea.offsetHeight - player.offsetHeight) {
+    playerY += playerSpeed;
+  }
+}
+
 // Make player jump
 function jump() {
-  if (isJumping || isFalling) {
-    return;
-  }
-
-  isJumping = true;
-
-  let jumpInterval = setInterval(function() {
-    if (playerY >= jumpHeight) {
-      clearInterval(jumpInterval);
-      isFalling = true;
-    } else {
-      playerY += playerSpeed * 2;
-    }
-  }, 10);
-
-  setTimeout(function() {
-    let fallInterval = setInterval(function() {
-      if (playerY <= 0) {
-        clearInterval(fallInterval);
-        isJumping = false;
-        isFalling = false;
+  if (!isJumping && !isFalling) {
+    isJumping = true;
+    let jumpVelocity = 15;
+    let jumpInterval = setInterval(function() {
+      if (jumpVelocity >= 0) {
+        playerY -= jumpVelocity;
+        jumpVelocity--;
       } else {
-        playerY -= playerSpeed * 2;
+        clearInterval(jumpInterval);
+        isJumping = false;
       }
     }, 10);
-  }, 500);
+  }
 }
 
 // Add event listeners for arrow keys and spacebar
@@ -201,7 +232,7 @@ document.addEventListener('keyup', function(event) {
 });
 
 // Start game loop
-window.requestAnimationFrame(gameLoop);
+setTimeout(gameLoop, 0);
   </script>
 </body>
 </html>
