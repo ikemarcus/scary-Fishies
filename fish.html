@@ -87,21 +87,23 @@
     var canvas = document.getElementById("game-canvas");
     var ctx = canvas.getContext("2d");
     var playerImage = new Image();
-    playerImage.src = "https://pngimg.com/uploads/goldfish/goldfish_PNG95.png"; 
+    playerImage.src =
+      "https://pngimg.com/uploads/goldfish/goldfish_PNG95.png";
     var enemyImage = new Image();
-    enemyImage.src = "https://th.bing.com/th/id/R.8860b204b6323b0001661e2727cfff3b?rik=MW7sjGPqoKJdlg&pid=ImgRaw&r=0";
+    enemyImage.src =
+      "https://th.bing.com/th/id/R.8860b204b6323b0001661e2727cfff3b?rik=MW7sjGPqoKJdlg&pid=ImgRaw&r=0";
     var enemies = [
       { x: canvas.width / 2, y: canvas.height - 150, speed: 2 },
       { x: canvas.width / 2, y: canvas.height - 300, speed: 4 },
       { x: canvas.width / 2, y: canvas.height - 450, speed: 6 },
-      { x: canvas.width / 2, y: canvas.height - 600, speed: 8 }
+      { x: canvas.width / 2, y: canvas.height - 600, speed: 8 },
     ];
     var playerX = canvas.width / 2;
     var playerY = canvas.height - 50;
     var playerSpeed = 5;
     var jumpHeight = 150;
     var isJumping = false;
-    var maxJumps = 2;  // Maximum number of jumps allowed
+    var maxJumps = 2; // Maximum number of jumps allowed
     var jumpCount = 0; // Counter for jumps made
     var platforms = [];
     var gameOver = false;
@@ -144,7 +146,7 @@
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
         width: 100,
-        height: 20
+        height: 20,
       });
     }
 
@@ -180,15 +182,18 @@
         playerY += gravity;
       }
 
-
       // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Draw platforms
       for (var i = 0; i < platforms.length; i++) {
         ctx.fillStyle = "darkblue";
-        ctx.fillRect
-        (platforms[i].x, platforms[i].y, platforms[i].width, platforms[i].height);
+        ctx.fillRect(
+          platforms[i].x,
+          platforms[i].y,
+          platforms[i].width,
+          platforms[i].height
+        );
       }
 
       // Draw player
@@ -231,6 +236,11 @@
           jumpCount = 0; // Reset jump count when player lands on a platform
           break;
         }
+      }
+
+      // Check for collision with top of the canvas
+      if (playerY <= 0) {
+        showYouWinScreen();
       }
 
       // Check for collision with bottom of canvas
@@ -310,12 +320,10 @@
     function startGame() {
       gameOver = false;
       playerX = canvas.width / 2;
-      playerY = canvas.height -
-    50;
-    jumpCount = 0;
-    window.requestAnimationFrame(gameLoop);
+      playerY = canvas.height - 50;
+      jumpCount = 0;
+      window.requestAnimationFrame(gameLoop);
     }
-
 
     function showGameOverScreen() {
       // Clear the canvas
@@ -344,8 +352,36 @@
       ctx.fillText("Start Over", buttonX + 45, buttonY + 30); // Adjust the text position
     }
 
-    // Start game
+    function showYouWinScreen() {
+      // Clear the canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Display "You Win" message
+      var youWinText = "You Win!";
+      var youWinTextWidth = ctx.measureText(youWinText).width;
+      var youWinTextX = canvas.width / 2.37 - youWinTextWidth / 6.5;
+      var youWinTextY = canvas.height / 2 - 70; // Adjust the vertical position
+
+      ctx.fillStyle = "darkgreen";
+      ctx.font = "70px Creepster";
+      ctx.fillText(youWinText, youWinTextX, youWinTextY);
+
+      // Display start over button
+      var buttonWidth = 200;
+      var buttonHeight = 50;
+      var buttonX = canvas.width / 2 - buttonWidth / 2;
+      var buttonY = canvas.height / 2 - buttonHeight / 2; // Adjust the vertical position
+
+      ctx.fillStyle = "black";
+      ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+      ctx.fillStyle = "green";
+      ctx.font = "30px Creepster";
+      ctx.fillText("Start Over", buttonX + 45, buttonY + 30); // Adjust the text position
+    }
+
     startGame();
   </script>
+</body>
+</html>
 </body>
 </html>
