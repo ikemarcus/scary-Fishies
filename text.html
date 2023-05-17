@@ -185,6 +185,8 @@ function applyGravity() {
   if (playerY < gameArea.offsetHeight - player.offsetHeight) {
     playerY += playerSpeed;
     isFalling = true;
+  } else {
+    isFalling = false;
   }
 }
 
@@ -192,6 +194,8 @@ function applyGravity() {
 function applyFalling() {
   if (playerY < gameArea.offsetHeight - player.offsetHeight) {
     playerY += playerSpeed;
+  } else {
+    isFalling = false;
   }
 }
 
@@ -200,15 +204,28 @@ function jump() {
   if (!isJumping && !isFalling) {
     isJumping = true;
     let jumpVelocity = 15;
-    let jumpInterval = setInterval(function() {
-      if (jumpVelocity >= 0) {
+    let jumpHeightReached = playerY - jumpHeight;
+
+    function performJump() {
+      if (playerY > jumpHeightReached) {
         playerY -= jumpVelocity;
         jumpVelocity--;
+      } else if (playerY < gameArea.offsetHeight - player.offsetHeight) {
+        playerY += playerSpeed;
       } else {
-        clearInterval(jumpInterval);
         isJumping = false;
+        isFalling = false;
       }
-    }, 10);
+    }
+
+    function jumpLoop() {
+      if (isJumping) {
+        performJump();
+        setTimeout(jumpLoop, 10);
+      }
+    }
+
+    jumpLoop();
   }
 }
 
